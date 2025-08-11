@@ -14,30 +14,38 @@ def log_message(message):
 def get_volatility_score(closes):
     import numpy as np
     try:
-        if closes is None or len(closes) < 2:
+        if closes is None:
             return 0.0
-        arr = np.asarray(closes)
+        
+        # Convert to numpy array and handle various input types
+        if hasattr(closes, 'values'):  # pandas Series/DataFrame
+            arr = np.asarray(closes.values).flatten()
+        else:
+            arr = np.asarray(closes).flatten()
+        
+        # Ensure we have enough data points
+        if len(arr) < 2:
+            log_message(f"⚠️ get_volatility_score: Not enough data points ({len(arr)})")
+            return 0.0
+        
+        # Remove any NaN values
+        arr = arr[~np.isnan(arr)]
+        if len(arr) < 2:
+            log_message("⚠️ get_volatility_score: All values are NaN")
+            return 0.0
+        
+        # Calculate returns (percentage change)
         returns = np.diff(arr) / arr[:-1]
-        return np.std(returns)
+        volatility = np.std(returns)
+        
+        log_message(f"✅ Volatility calculated: {volatility:.6f} from {len(arr)} data points")
+        return float(volatility)
+        
     except Exception as e:
         log_message(f"❌ Erreur dans get_volatility_score: {e}")
         return 0.0
 
-def should_buy_lutessia(score_final, lute_score, expected_gain):
-    from decimal import Decimal
-    log_message(
-        f"🧠 [CHECK IA] Score: {score_final:.4f}, LUTE: {lute_score:.4f}, Gain: {expected_gain:.2f}%")
-    if score_final < Decimal("0.6"):
-        log_message("⛔ Refus IA : Score trop bas (< 0.6)")
-        return False
-    if lute_score <= Decimal("0"):
-        log_message("⛔ Refus IA : LUTE négatif ou nul (≤ 0)")
-        return False
-    if expected_gain < Decimal("1.5"):
-        log_message("⛔ Refus IA : Gain insuffisant (< 1.5%)")
-        return False
-    log_message("✅ Achat autorisé par IA (score, LUTE et gain OK)")
-    return True
+# Function removed - using should_buy_lutessia from line 66
 
 def generate_ai_scores(product_id):
     import random
@@ -62,13 +70,7 @@ def get_signal_strength(product_id):
 
 
 
-def log_message(message):
-    import logging
-    from datetime import datetime
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    timestamped_message = f"{timestamp} - {message}"
-    print(timestamped_message)
-    logging.info(timestamped_message)
+# Function removed - using log_message from line 6
 def should_buy_lutessia(
     score_final, lute_score, expected_gain, seuil_score=0.6, seuil_gain=1.5
 ):
@@ -99,24 +101,7 @@ def validate_lutessia_before_buy(
     return True
 
 
-def should_buy_lutessia(
-    score_final, lute_score, expected_gain, seuil_score=0.6, seuil_gain=1.5
-):
-    log_message(
-        f"🧠 [CHECK IA] Score: {score_final:.4f}, LUTE: {lute_score:.4f}, Gain: {expected_gain:.2f}%"
-    )
-    if score_final < seuil_score:
-        log_message(f"⛔ Refus IA : Score trop bas (< {seuil_score})")
-        return False
-    if lute_score <= 0:
-        log_message("⛔ Refus IA : LUTE négatif ou nul (≤ 0)")
-        return False
-    if expected_gain < seuil_gain:
-        log_message(f"⛔ Refus IA : Gain insuffisant (< {seuil_gain}%)")
-        return False
-
-    log_message("✅ Achat autorisé par IA (score, LUTE et gain OK)")
-    return True
+# Function removed - using should_buy_lutessia from line 66
 
 
 # === Logique IA corrigée et intégrée ===
@@ -432,15 +417,28 @@ if not os.path.exists(LOG_FILE):
     print(f"🔔 Registre Excel initial créé : {os.path.abspath(LOG_FILE)}")
 
 
-def compare_first_real_and_last_pred(predictions):
-    """Retourne True si la dernière valeur prédite est > première réelle."""
-
+def compare_first_real_and_last_pred(predictions_or_yesterday=None, today_pred=None):
+    """
+    Flexible function that handles both single array and two-parameter calls.
+    Returns True/trend message if price will increase, False/trend message if decrease.
+    """
     try:
+        # Handle two-parameter call (yesterday_value, today_prediction)
+        if today_pred is not None:
+            if today_pred > predictions_or_yesterday:
+                return f"📈 Le prix de la crypto va augmenter 🚀"
+            else:
+                return f"📉 Le prix de la crypto va baisser ⚠️"
+        
+        # Handle single array parameter (backward compatibility)
+        if predictions_or_yesterday is not None and hasattr(predictions_or_yesterday, '__len__'):
+            if len(predictions_or_yesterday) >= 2:
+                return predictions_or_yesterday[-1] > predictions_or_yesterday[0]
+        
+        return False
 
-        return predictions[-1] > predictions[0]
-
-    except Exception:
-
+    except Exception as e:
+        log_message(f"❌ Erreur dans compare_first_real_and_last_pred: {e}")
         return False
 
 
@@ -3784,15 +3782,7 @@ if __name__ == '__main__':
     Predictions_calculs()
 
 
-    def compare_first_real_and_last_pred(yesterday_last_value, today_pred_value):
-
-        if today_pred_value > yesterday_last_value:
-
-            return f"📈 Le prix de la crypto va augmenter 🚀"
-
-        else:
-
-            return f"📉 Le prix de la crypto va baisser ⚠️"
+    # Function removed - using global compare_first_real_and_last_pred instead
 
 
     def will_crypto_increase_or_decrease(yesterday_last_real, today_pred):
@@ -8323,19 +8313,7 @@ if __name__ == '__main__':
     Predictions_calculs()
 
 
-    def compare_first_real_and_last_pred(yesterday_last_real, today_pred):
-
-        yesterday_last_value = yesterday_last_real.iloc[0]
-
-        last_pred_value = today_pred.iloc[-1]
-
-        if last_pred_value > yesterday_last_value:
-
-            return f"Le prix de la crypto va augmenter (Today_Prediction: {last_pred_value} > Yesterday_Prediction: {yesterday_last_value})"
-
-        else:
-
-            return f"Le prix de la crypto va diminuer (Today_Prediction: {last_pred_value} < Yesterday_Prediction: {yesterday_last_value})"
+    # Function removed - using global compare_first_real_and_last_pred instead
 
 
     def will_crypto_increase_or_decrease(yesterday_last_real, today_pred):
