@@ -78,7 +78,7 @@ seaborn
 setuptools
 simple-websocket
 six
-sklearn
+# sklearn - replaced with scikit-learn which is already included above
 statsmodels
 structlog
 ta
