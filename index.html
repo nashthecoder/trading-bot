@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>
+   Trading Bot Interface <span class="text-muted">v2025.05.18-AI-LIMIT-AUTO</span>
+</title>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<!-- Font Awesome for Icons -->
+<link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM0sXbO7rfszUco6i5he1l8s6Z+n9KCVOAsoH0T" rel="stylesheet"/>
+<style>
+   canvas { max-width: 100%; }
+
+        body {
+            background: #f8f9fa;
+        }
+
+        .logs-container {
+            height: 300px;
+            overflow-y: scroll;
+            background-color: #f1f1f1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn-action {
+            margin-right: 10px;}
+
+        pre {
+            font-size: 30px;  /* Adjust text size */
+            font-weight: bold;  /* Make text bold */
+            }
+
+        .crypto-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    justify-content: center;
+    align-content: center;
+    min-height: 100vh; /* Pour centrer verticalement */
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+       .crypto-grid label {
+                            display: flex;
+                            align-items: center;
+                            font-size: 1rem; /* Taille de la police */
+                            }
+  </style>
+<style>
+   /* From Uiverse.io by WhiteNervosa */
+    .customCheckBoxHolder {
+    margin: 5px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.customCheckBox {
+  width: fit-content;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  padding: 2px 8px;
+  background-color: rgba(0, 0, 0, 0.16);
+  border-radius: 0px;
+  color: rgba(255, 255, 255, 0.7);
+  transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition-duration: 300ms;
+  transition-property: color, background-color, box-shadow;
+  display: flex;
+  height: 32px;
+  align-items: center;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px 1px 1px 0px;
+  outline: none;
+  justify-content: center;
+  min-width: 55px;
+}
+
+.customCheckBox:hover {
+  background-color: #2c2c2c;
+  color: white;
+  box-shadow: rgba(0, 0, 0, 0.23) 0px -4px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px, rgba(0, 0, 0, 0.17) 0px 2px 4px 1px;
+}
+
+.customCheckBox .inner {
+  font-size: 18px;
+  font-weight: 900;
+  pointer-events: none;
+  transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition-duration: 300ms;
+  transition-property: transform;
+  transform: translateY(0px);
+}
+
+.customCheckBox:hover .inner {
+  transform: translateY(-2px);
+}
+
+/* Multiple Checkboxes can be chained together for a radio input */
+.customCheckBoxWrapper:first-of-type .customCheckBox {
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+  border-right: 0px;
+}
+
+.customCheckBoxWrapper:last-of-type .customCheckBox {
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
+  border-left: 0px;
+}
+
+.customCheckBoxInput {
+  display: none;
+}
+
+.customCheckBoxInput:checked + .customCheckBoxWrapper .customCheckBox {
+  background-color: #2d6737;
+  color: white;
+  box-shadow: rgba(0, 0, 0, 0.23) 0px -4px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px, rgba(0, 0, 0, 0.17) 0px 2px 4px 1px;
+}
+
+.customCheckBoxInput:checked + .customCheckBoxWrapper .customCheckBox .inner {
+  transform: translateY(-2px);
+}
+
+.customCheckBoxInput:checked + .customCheckBoxWrapper .customCheckBox:hover {
+  background-color: #34723f;
+  box-shadow: rgba(0, 0, 0, 0.26) 0px -4px 1px 0px inset, rgba(255, 255, 255, 0.17) 0px -1px 1px 0px, rgba(0, 0, 0, 0.15) 0px 3px 6px 2px;
+}
+
+.customCheckBoxWrapper .customCheckBox:hover .inner {
+  transform: translateY(-2px);
+}
+/* From Uiverse.io by garerim */
+/* From Uiverse.io by ercnersoy */
+.input {
+ border: none;
+ padding: 1rem;
+ border-radius: 1rem;
+ background: #f8f9fa;
+ box-shadow: 20px 20px 60px #c5c5c5,
+		-20px -20px 60px #ffffff;
+ transition: 0.3s;
+}
+
+.input:focus {
+ outline-color: #f8f9fa;
+ background: #f8f9fa;
+ box-shadow: inset 20px 20px 60px #c5c5c5,
+		inset -20px -20px 60px #ffffff;
+ transition: 0.3s;
+}
+  </style>
+<style>
+   /* SWITCH */
+/* From Uiverse.io by Yaya12085 */
+.switch {
+  position: relative;
+  height: 1.5rem;
+  width: 3rem;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 9999px;
+  background-color: rgba(100, 116, 139, 0.377);
+  transition: all .3s ease;
+}
+
+.switch:checked {
+  background-color: rgba(77, 175, 80, 1);
+}
+
+.switch::before {
+  position: absolute;
+  content: "";
+  left: calc(1.5rem - 1.6rem);
+  top: calc(1.5rem - 1.6rem);
+  display: block;
+  height: 1.6rem;
+  width: 1.6rem;
+  cursor: pointer;
+  border: 1px solid rgba(100, 116, 139, 0.527);
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0 3px 10px rgba(100, 116, 139, 0.327);
+  transition: all .3s ease;
+}
+
+.switch:hover::before {
+  box-shadow: 0 0 0px 8px rgba(0, 0, 0, .15)
+}
+
+.switch:checked:hover::before {
+  box-shadow: 0 0 0px 8px rgba(77, 175, 80, .15)
+}
+
+.switch:checked:before {
+  transform: translateX(100%);
+  border-color: rgba(77, 175, 80, 1);
+}
+  </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js">
+</script>
+<script src="https://cdn.socket.io/4.0.0/socket.io.min.js">
+</script>
+<!-- Intégration de Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com">
+</script>
+<!-- Intégration de Highlight.js pour la coloration syntaxique -->
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11.5.0/lib/highlight.js">
+</script>
+<link href="https://cdn.jsdelivr.net/npm/highlight.js@11.5.0/styles/github.min.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="container my-5">
+<h1 class="mb-4">📁 <span class="badge bg-dark">{{ filename }}</span><br/>
+    Trading Bot Interface <span class="text-muted">v2025.05.18-AI-LIMIT-AUTO</span>
+</h1>
+<div id="multi-series-control" style="margin-top:30px;">
+<h3>🎛️ Lancer des séries spécifiques</h3>
+<form id="seriesForm">
+<label><input name="active_series" type="checkbox" value="Serie 1"/> Série 1 – Scalping Volatile</label><br/>
+<label><input name="active_series" type="checkbox" value="Serie 2"/> Série 2 – Large Caps</label><br/>
+<label><input name="active_series" type="checkbox" value="Serie 3"/> Série 3 – DeFi MidCap</label><br/>
+<label><input name="active_series" type="checkbox" value="Serie 4"/> Série 4 – Trend Following</label><br/>
+<label><input name="active_series" type="checkbox" value="Serie 5"/> Série 5 – Swing Trading</label><br/>
+<label><input name="active_series" type="checkbox" value="Serie 6"/> Série 6 – Microcap Volatile</label><br/>
+<label><input name="active_series" type="checkbox" value="Serie 7"/> Série 7 – Stable Hedging</label><br/>
+<label><input name="active_series" type="checkbox" value="Serie 8"/> Série 8 – Hold Moyen Terme</label><br/>
+<label><input name="active_series" type="checkbox" value="Serie 9"/> Série 9 – Emerging Protocols</label><br/><br/>
+
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <label class="form-label" for="TP_DYNAMIQUE_MIN">
+      🟩 TP Dynamique Min (%)<br>
+      <small class="text-muted">(Plancher pour TP net dynamique, ex: 0.018 = 1,8%)</small>
+    </label>
+    <input class="form-control" id="TP_DYNAMIQUE_MIN" name="TP_DYNAMIQUE_MIN"
+           placeholder="Ex: 0.018"
+           step="0.001" type="number"
+           value="{{ form_data.TP_DYNAMIQUE_MIN or 0.018 }}">
+  </div>
+  <div class="col-md-6 mb-3">
+    <label class="form-label" for="EXTRA_MARG">
+      🟧 Marge de sécurité additionnelle<br>
+      <small class="text-muted">(ex: 0.005 = 0,5%)</small>
+    </label>
+    <input class="form-control" id="EXTRA_MARG" name="EXTRA_MARG"
+           placeholder="Ex: 0.005"
+           step="0.001" type="number"
+           value="{{ form_data.EXTRA_MARG or 0.005 }}">
+  </div>
+</div>
+<button onclick="submitSeries()" type="button">✅ Lancer les séries sélectionnées</button>
+</form>
+</div>
+<script>
+function submitSeries() {
+  const selected = Array.from(document.querySelectorAll('input[name=active_series]:checked')).map(cb => cb.value);
+  alert('Séries sélectionnées :\n' + selected.join(', '));
+  localStorage.setItem("active_series", JSON.stringify(selected));
+}
+</script>
+
+<div class="d-flex justify-content-between align-items-center my-3">
+<div>
+     {% if bot_running %}
+     <button class="btn btn-danger btn-action" onclick="controlBot('stop')" type="button">
+<i class="fas fa-stop">
+</i>
+      Stop Bot
+     </button>
+     {% else %}
+     <button class="btn btn-success btn-action" onclick="controlBot('start')" type="button">
+<i class="fas fa-play">
+</i>
+      Start Bot
+     </button>
+     {% endif %}
+    </div>
+<div>
+<a class="btn btn-secondary" href="{{ url_for('logout') }}">
+      Logout
+     </a>
+</div>
+</div>
+<!-- Bot Status -->
+   {% if bot_running %}
+   <div class="alert alert-success" role="alert">
+<i class="fas fa-play-circle">
+</i>
+    Bot is running.
+   </div>
+   {% else %}
+   <div class="alert alert-danger" role="alert">
+<i class="fas fa-stop-circle">
+</i>
+    Bot is stopped.
+   </div>
+   {% endif %}
+   <!--###############################################################################################################################################-->
+<div class="container p-8 max-w-full bg-white p-6 rounded-lg shadow-lg border-l-4 border-white">
+<!-- Bot Settings Form -->
+<form action="/update_settings" method="post">
+<!-- Choix de stratégie prédéfinie -->
+<div class="mb-3">
+<label class="form-label fw-bold" for="preset_strategy">📌 Stratégie prédéfinie :</label>
+<select class="form-select" id="preset_strategy" name="preset_strategy" onchange="applyPreset()">
+<option value="">-- Choisir une série --</option>
+<option value="serie1">Série 1 – Sécurisée</option>
+<option value="serie2">Série 2 – IA dynamique</option>
+<option value="serie3">Série 3 – Scalping</option>
+<option value="serie4">Série 4 – Tendance IA</option>
+<option value="serie5">Série 5 – Swing Trading</option>
+<option value="serie6">Série 6 – Scalping Volatile</option>
+<option value="serie7">Série 7 – Stablecoin Hedging</option>
+<option value="serie8">Série 8 – Hold Moyen-Terme</option>
+<option value="serie9">Série 9 – Anti-Volatility</option>
+</select>
+</div>
+<script>
+function applyPreset() {
+  const p = {
+    serie1: {buy: 0.05, tp: 0.018, sl: 0.007, trailStart: 1.0, trailStep: 0.3, minHold: 600, maxHold: 7200, freq: 300, orderType: "limit", comp: "true"},
+    serie2: {buy: 0.08, tp: 0.020, sl: 0.010, trailStart: 1.2, trailStep: 0.5, minHold: 180, maxHold: 3600, freq: 120, orderType: "auto", comp: "true"},
+    serie3: {buy: 0.05, tp: 0.009, sl: 0.005, trailStart: 0.7, trailStep: 0.2, minHold: 60, maxHold: 600, freq: 60, orderType: "market", comp: "false"},
+    serie4: {buy: 0.10, tp: 0.025, sl: 0.012, trailStart: 1.5, trailStep: 0.7, minHold: 900, maxHold: 10800, freq: 360, orderType: "limit", comp: "true"},
+    serie5: {
+    buy: 0.08,
+    tp: 0.02,
+    sl: 0.008,
+    trailStart: 1.0,
+    trailStep: 0.4,
+    minHold: 1800,
+    maxHold: 14400,
+    freq: 600,
+    orderType: "limit",
+    comp: "true"
+},
+  }[document.getElementById("preset_strategy").value];
+  if (!p) return;
+  document.getElementById("buy_percentage_of_capital").value = p.buy;
+  document.getElementById("sell_profit_target").value = p.tp;
+  document.getElementById("sell_stop_loss_target").value = p.sl;
+  document.getElementById("trailing_start_threshold").value = p.trailStart;
+  document.getElementById("trailing_sl_step").value = p.trailStep;
+  document.getElementById("min_hold_duration").value = p.minHold;
+  document.getElementById("max_hold_duration").value = p.maxHold;
+  document.getElementById("trade_frequency").value = p.freq;
+  document.getElementById("order_type").value = p.orderType;
+  document.getElementById("compound_enabled").value = p.comp;
+}
+</script>
+<!--<div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="risk_level" class="form-label">Risk Level:</label>
+                    <select class="form-select" id="risk_level" name="risk_level">
+                        <option value="conservative" {% if form_data.risk_level == 'conservative' %}selected{% endif %}>Conservative</option>
+                        <option value="moderate" {% if form_data.risk_level == 'moderate' %}selected{% endif %}>Moderate</option>
+                        <option value="aggressive" {% if form_data.risk_level == 'aggressive' %}selected{% endif %}>Aggressive</option>
+                    </select>
+                </div>
+            </div>-->
+<div class="row mb-3">
+<div class="container my-4">
+<h4 class="text-center text-primary mb-4 fw-bold border-bottom pb-2">
+        📊 Cochez les paires que vous souhaitez trader
+       </h4>
+<p class="text-center text-danger mb-4 fw-bold border-bottom pb-2">
+        les paires en rouge ne supporte pas le trading assisté par IA
+       </p>
+</div>
+<div class="customCheckBoxHolder">
+<!--1------------------------------------------------------->
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB1" name="selected_crypto_pairs" type="checkbox" value="ADA-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB1">
+<div class="customCheckBox">
+<div class="inner">
+           ADA-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB2" name="selected_crypto_pairs" type="checkbox" value="AAVE-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB2">
+<div class="customCheckBox">
+<div class="inner">
+           AAVE-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB3" name="selected_crypto_pairs" type="checkbox" value="AERO-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB3">
+<div class="customCheckBox text-danger">
+<div class="inner text-danger">
+           AERO-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB4" name="selected_crypto_pairs" type="checkbox" value="ALGO-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB4">
+<div class="customCheckBox">
+<div class="inner">
+           ALGO-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB5" name="selected_crypto_pairs" type="checkbox" value="AMP-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB5">
+<div class="customCheckBox text-danger">
+<div class="inner">
+           AMP-USDC
+          </div>
+</div>
+</label>
+</div>
+<!--2------------------------------------------------------->
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB6" name="selected_crypto_pairs" type="checkbox" value="ARB-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB6">
+<div class="customCheckBox">
+<div class="inner">
+           ARB-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB7" name="selected_crypto_pairs" type="checkbox" value="AVAX-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB7">
+<div class="customCheckBox">
+<div class="inner">
+           AVAX-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB8" name="selected_crypto_pairs" type="checkbox" value="BCH-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB8">
+<div class="customCheckBox">
+<div class="inner">
+           BCH-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB9" name="selected_crypto_pairs" type="checkbox" value="BONK-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB9">
+<div class="customCheckBox text-danger">
+<div class="inner">
+           BONK-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB10" name="selected_crypto_pairs" type="checkbox" value="BTC-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB10">
+<div class="customCheckBox">
+<div class="inner">
+           BTC-USDC
+          </div>
+</div>
+</label>
+</div>
+<!--3------------------------------------------------------->
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB11" name="selected_crypto_pairs" type="checkbox" value="CRV-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB11">
+<div class="customCheckBox">
+<div class="inner">
+           CRV-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB12" name="selected_crypto_pairs" type="checkbox" value="DOGE-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB12">
+<div class="customCheckBox">
+<div class="inner">
+           DOGE-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB13" name="selected_crypto_pairs" type="checkbox" value="DOT-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB13">
+<div class="customCheckBox">
+<div class="inner">
+           DOT-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB14" name="selected_crypto_pairs" type="checkbox" value="ETC-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB14">
+<div class="customCheckBox">
+<div class="inner">
+           ETC-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB15" name="selected_crypto_pairs" type="checkbox" value="ETH-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB15">
+<div class="customCheckBox">
+<div class="inner">
+           ETH-USDC
+          </div>
+</div>
+</label>
+</div>
+<!--4------------------------------------------------------->
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB16" name="selected_crypto_pairs" type="checkbox" value="EURC-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB16">
+<div class="customCheckBox text-danger">
+<div class="inner">
+           EURC-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB17" name="selected_crypto_pairs" type="checkbox" value="FET-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB17">
+<div class="customCheckBox">
+<div class="inner">
+           FET-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB18" name="selected_crypto_pairs" type="checkbox" value="FIL-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB18">
+<div class="customCheckBox">
+<div class="inner">
+           FIL-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB19" name="selected_crypto_pairs" type="checkbox" value="GRT-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB19">
+<div class="customCheckBox">
+<div class="inner">
+           GRT-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB20" name="selected_crypto_pairs" type="checkbox" value="HBAR-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB20">
+<div class="customCheckBox">
+<div class="inner">
+           HBAR-USDC
+          </div>
+</div>
+</label>
+</div>
+<!--5------------------------------------------------------->
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB21" name="selected_crypto_pairs" type="checkbox" value="ICP-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB21">
+<div class="customCheckBox">
+<div class="inner">
+           ICP-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB22" name="selected_crypto_pairs" type="checkbox" value="IDEX-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB22">
+<div class="customCheckBox">
+<div class="inner">
+           IDEX-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB23" name="selected_crypto_pairs" type="checkbox" value="INJ-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB23">
+<div class="customCheckBox text-danger">
+<div class="inner">
+           INJ-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB24" name="selected_crypto_pairs" type="checkbox" value="JASMY-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB24">
+<div class="customCheckBox text-danger">
+<div class="inner">
+           JASMY-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB25" name="selected_crypto_pairs" type="checkbox" value="JTO-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB25">
+<div class="customCheckBox text-danger">
+<div class="inner">
+           JTO-USDC
+          </div>
+</div>
+</label>
+</div>
+<!--6------------------------------------------------------->
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB26" name="selected_crypto_pairs" type="checkbox" value="LINK-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB26">
+<div class="customCheckBox">
+<div class="inner">
+           LINK-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB27" name="selected_crypto_pairs" type="checkbox" value="LTC-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB27">
+<div class="customCheckBox">
+<div class="inner">
+           LTC-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB28" name="selected_crypto_pairs" type="checkbox" value="MATIC-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB28">
+<div class="customCheckBox">
+<div class="inner">
+           MATIC-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB29" name="selected_crypto_pairs" type="checkbox" value="MOG-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB29">
+<div class="customCheckBox text-danger">
+<div class="inner">
+           MOG-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB30" name="selected_crypto_pairs" type="checkbox" value="NEAR-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB30">
+<div class="customCheckBox">
+<div class="inner">
+           NEAR-USDC
+          </div>
+</div>
+</label>
+</div>
+<!--7------------------------------------------------------->
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB31" name="selected_crypto_pairs" type="checkbox" value="ONDO-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB31">
+<div class="customCheckBox text-danger">
+<div class="inner">
+           ONDO-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB32" name="selected_crypto_pairs" type="checkbox" value="PEPE-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB32">
+<div class="customCheckBox">
+<div class="inner">
+           PEPE-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB33" name="selected_crypto_pairs" type="checkbox" value="RENDER-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB33">
+<div class="customCheckBox text-danger">
+<div class="inner">
+           RENDER-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB34" name="selected_crypto_pairs" type="checkbox" value="RNDR-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB34">
+<div class="customCheckBox text-danger">
+<div class="inner">
+           RNDR-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB35" name="selected_crypto_pairs" type="checkbox" value="SEI-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB35">
+<div class="customCheckBox text-danger">
+<div class="inner">
+           SEI-USDC
+          </div>
+</div>
+</label>
+</div>
+<!--8------------------------------------------------------->
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB36" name="selected_crypto_pairs" type="checkbox" value="SHIB-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB36">
+<div class="customCheckBox text-danger">
+<div class="inner">
+           SHIB-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB37" name="selected_crypto_pairs" type="checkbox" value="SOL-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB37">
+<div class="customCheckBox">
+<div class="inner">
+           SOL-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB38" name="selected_crypto_pairs" type="checkbox" value="SUI-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB38">
+<div class="customCheckBox">
+<div class="inner">
+           SUI-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB39" name="selected_crypto_pairs" type="checkbox" value="SUPER-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB39">
+<div class="customCheckBox">
+<div class="inner">
+           SUPER-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB40" name="selected_crypto_pairs" type="checkbox" value="SUSHI-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB40">
+<div class="customCheckBox">
+<div class="inner">
+           SUSHI-USDC
+          </div>
+</div>
+</label>
+</div>
+<!--9------------------------------------------------------->
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB41" name="selected_crypto_pairs" type="checkbox" value="SWFTC-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB41">
+<div class="customCheckBox">
+<div class="inner">
+           SWFTC-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB42" name="selected_crypto_pairs" type="checkbox" value="TIA-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB42">
+<div class="customCheckBox text-danger">
+<div class="inner">
+           TIA-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB43" name="selected_crypto_pairs" type="checkbox" value="UNI-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB43">
+<div class="customCheckBox">
+<div class="inner">
+           UNI-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB44" name="selected_crypto_pairs" type="checkbox" value="USDT-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB44">
+<div class="customCheckBox">
+<div class="inner">
+           USDT-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB45" name="selected_crypto_pairs" type="checkbox" value="VET-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB45">
+<div class="customCheckBox">
+<div class="inner">
+           VET-USDC
+          </div>
+</div>
+</label>
+</div>
+<!--10------------------------------------------------------->
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB46" name="selected_crypto_pairs" type="checkbox" value="WIF-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB46">
+<div class="customCheckBox text-danger">
+<div class="inner">
+           WIF-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB47" name="selected_crypto_pairs" type="checkbox" value="XLM-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB47">
+<div class="customCheckBox">
+<div class="inner">
+           XLM-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB48" name="selected_crypto_pairs" type="checkbox" value="XYO-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB48">
+<div class="customCheckBox">
+<div class="inner">
+           XYO-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB49" name="selected_crypto_pairs" type="checkbox" value="XRP-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB49">
+<div class="customCheckBox">
+<div class="inner">
+           XRP-USDC
+          </div>
+</div>
+</label>
+</div>
+<div class="customCheckBoxHolder">
+<input class="customCheckBoxInput" id="cCB50" name="selected_crypto_pairs" type="checkbox" value="YFI-USDC"/>
+<label class="customCheckBoxWrapper" for="cCB50">
+<div class="customCheckBox">
+<div class="inner">
+           YFI-USDC
+          </div>
+</div>
+</label>
+</div>
+</div>
+<!--#############################################################-->
+<p>
+</p>
+<div class="container my-4">
+<h4 class="text-center text-primary mb-4 fw-bold border-bottom pb-2">
+        ⚠️ Paramètres de gestion de risque
+       </h4>
+</div>
+<div class="row">
+<!-- Pourcentage de capital à investir -->
+<!-- Pourcentage de capital à vendre
+    <div class="col-md-6 mb-3">
+        <div class="form-group">
+            <p>Pourcentage de capital à vendre (Ex : 10)</p>
+            <input type="number"
+                   class="form-control"
+                   id="sell_percentage_of_capital"
+                   name="sell_percentage_of_capital"
+                   value="{{ form_data.sell_percentage_of_capital }}"
+                   placeholder="Pourcentage de capital à vendre (Ex : 10)"
+                   min="0" step="0.01" max="100">
+        </div>
+    </div>
+
+     Seuil de prise de profit -->
+<!-- Intervalle entre achats
+    <div class="col-md-6 mb-3">
+        <div class="form-group">
+            <p>Intervalle entre deux achats (minutes) (Ex : 60 = 1 heure)</p>
+            <input type="number"
+                   class="form-control input"
+                   id="dca_interval_minute"
+                   name="dca_interval_minute"
+                   value="{{ form_data.dca_interval_minute }}"
+                   placeholder="Intervalle entre deux achats (minutes) (Ex : 60 pour 1 heure)"
+                   min="1">
+        </div>
+    </div>-->
+<!-- Activer l'intégration de l'IA dans la prise de décision -->
+</div>
+<!--#############################################################-->
+</div>
+<button class="btn btn-primary btn-action" type="submit">
+<i class="fas fa-save">
+</i>
+      Update Settings
+     </button><div class="col-md-6 mb-3">
+<div class="form-group">
+<label class="form-label" for="simulation_toggle">
+<strong>Mode de Simulation</strong>
+</label>
+<input class="switch" id="simulation_toggle" name="simulation_mode" type="checkbox" value="True"/>
+<span style="font-size: 30px"><b>Simulation</b></span>
+</div>
+</div><div class="col-md-6 mb-3">
+<div class="form-group">
+<label class="form-label" for="trade_frequency">
+<strong>
+           Fréquence de Trade (en secondes)
+          </strong>
+</label>
+<input class="form-control input" id="trade_frequency" min="10" name="trade_frequency" placeholder="Ex: 30" step="1" type="number" value="{{ form_data.trade_frequency }}"/>
+</div>
+</div><div class="col-md-6 mb-3">
+<div class="form-group">
+<!-- Case à cocher pour envoyer true si elle est cochée -->
+<input class="switch" id="ia" name="ia" type="checkbox" value="True"/>
+<span style="font-size: 30px">
+<b>
+           IA
+          </b>
+</span>
+</div>
+</div>
+<div class="row mb-3"><label class="form-label" for="order_type">Type de trade:</label><select class="form-select" id="order_type" name="order_type"><option value="market">Market</option><option value="limit">Limit</option><option value="auto">Auto</option></select><div>
+<div class="mb-3">
+<label class="form-label" for="buy_percentage_of_capital">Buy % of Capital</label>
+<input class="form-control" id="buy_percentage_of_capital" name="buy_percentage_of_capital" placeholder="Ex: 0.05" step="0.001" type="number" value="0.08"/>
+</div>
+<div class="mb-3">
+<label class="form-label" for="sell_profit_target">Sell Profit Target</label>
+<input class="form-control" id="sell_profit_target" name="sell_profit_target" placeholder="Ex: 0.008" step="0.001" type="number" value="0.016"/>
+</div>
+<div class="mb-3">
+<label class="form-label" for="sell_stop_loss_target">Sell Stop Loss Target</label>
+<input class="form-control" id="sell_stop_loss_target" name="sell_stop_loss_target" placeholder="Ex: 0.003" step="0.001" type="number" value="0.008"/>
+</div>
+<div class="mb-3">
+<label class="form-label" for="max_drawdown_pct">🔻 Seuil Max de Perte (% drawdown)</label>
+<input class="form-control" id="max_drawdown_pct" name="max_drawdown_pct" placeholder="Ex: -5" step="0.1" type="number" value="-5"/>
+</div>
+<div class="mb-3">
+<label class="form-label" for="LIMIT_ENABLED">LIMIT Enabled</label>
+<select class="form-select" id="LIMIT_ENABLED" name="LIMIT_ENABLED">
+<option value="true">true</option>
+<option value="false">false</option>
+</select>
+</div>
+<div class="mb-3">
+<label class="form-label" for="LIMIT_SPREAD">LIMIT Spread</label>
+<input class="form-control" id="LIMIT_SPREAD" name="LIMIT_SPREAD" placeholder="Ex: 0.001" step="0.0001" type="number" value="0.002"/>
+</div>
+<div class="mb-3">
+<label class="form-label" for="LIMIT_TIMEOUT">LIMIT Timeout (seconds)</label>
+<input class="form-control" id="LIMIT_TIMEOUT" name="LIMIT_TIMEOUT" placeholder="Ex: 3" step="1" type="number" value="100"/>
+</div>
+<div class="mb-3">
+<label class="form-label" for="MIN_NET_PROFIT_TARGET">Min Net Profit Target</label>
+<input class="form-control" id="MIN_NET_PROFIT_TARGET" name="MIN_NET_PROFIT_TARGET" placeholder="Ex: 0.012" step="0.001" type="number" value="0.014"/>
+</div>
+</div></div>
+<!-- ✅ Paramètres avancés ajoutés -->
+<div class="mb-3">
+<label class="form-label" for="trailing_start_threshold">Trailing Start Threshold (%)</label>
+<input class="form-control" id="trailing_start_threshold" name="trailing_start_threshold" placeholder="Ex: 0.008" step="0.001" type="number" value="0.008"/>
+</div>
+<div class="mb-3">
+<label class="form-label" for="trailing_sl_step">Trailing SL Step (%)</label>
+<input class="form-control" id="trailing_sl_step" name="trailing_sl_step" placeholder="Ex: 0.004" step="0.001" type="number" value="0.004"/>
+</div>
+<div class="mb-3">
+<label class="form-label" for="min_hold_duration">Min Hold Duration (sec)</label>
+<input class="form-control" id="min_hold_duration" name="min_hold_duration" placeholder="180" type="number" value="180"/>
+</div>
+<div class="mb-3">
+<label class="form-label" for="max_hold_duration">Max Hold Duration (sec)</label>
+<input class="form-control" id="max_hold_duration" name="max_hold_duration" placeholder="7200" type="number" value="7200"/>
+</div>
+<div class="mb-3">
+<label class="form-label" for="compound_enabled">Compounding Enabled</label>
+<select class="form-select" id="compound_enabled" name="compound_enabled">
+<option value="true">true</option>
+<option value="false">false</option>
+</select>
+</div>
+</form>
+</div>
+<!--###############################################################################################################################################-->
+<div class="container p-8 max-w-full">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Total Account Section 1 -->
+<div class="p-4 md:w">
+<h1 class="text-4xl font-bold text-left text-black mb-6">
+       Your Total Balance
+      </h1>
+<div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-black">
+<pre class="hljs bg-white p-4 rounded-lg overflow-auto text-sm whitespace-pre-wrap h-[80px] overflow-y-auto personnalisation_dedi" id="log_Balance_Total">{{ log_Balance_Total }}</pre>
+</div>
+</div>
+<!-- Total Account Section 2 -->
+<div class="p-4 md:w">
+<h1 class="text-4xl font-bold text-left text-black mb-6">
+       Your USDC
+      </h1>
+<div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-black">
+<pre class="hljs bg-white p-4 rounded-lg overflow-auto text-sm whitespace-pre-wrap h-[80px] overflow-y-auto personnalisation_dedi" id="log_usdc_balance">{{ log_usdc_balance }}</pre>
+</div>
+</div>
+<!-- Total Account Section 3 -->
+<div class="p-4 md:w">
+<h1 class="text-4xl font-bold text-left text-black mb-6">
+       Your BTC
+      </h1>
+<div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-black">
+<pre class="hljs bg-white p-4 rounded-lg overflow-auto text-sm whitespace-pre-wrap h-[80px] overflow-y-auto personnalisation_dedi" id="log_eth2_balance">{{ log_eth2_balance }}</pre>
+</div>
+</div>
+</div>
+</div>
+<!-- Resume des comptes Crypto -->
+<div class="container ml-4 p-8 max-w-full">
+<h1 class="text-4xl font-bold text-center text-black mb-6">
+     Résumé des Comptes Crypto
+    </h1>
+<!-- Grid Container -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Première carte -->
+<div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-black">
+<h2 class="text-xl font-semibold text-black mb-4">
+       Détails des Profits
+      </h2>
+<pre class="hljs bg-white p-4 rounded-lg overflow-auto text-sm whitespace-pre-wrap h-[600px] overflow-y-auto" id="log">{{ log }}</pre>
+</div>
+<!-- Deuxième carte -->
+<div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-black">
+<h2 class="text-xl font-semibold text-black mb-4">
+       Détails des Ordres
+      </h2>
+<pre class="hljs bg-white p-4 rounded-lg overflow-auto text-sm whitespace-pre-wrap h-[600px] overflow-y-auto" id="log_orders">{{ log_orders }}</pre>
+</div>
+</div>
+</div>
+<!-- Chart Section -->
+<div class="container ml-4 p-8 md h-auto min-h-screen">
+<h1 class="text-4xl font-bold text-center text-black mb-6">
+     performance
+    </h1>
+<div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-black">
+<canvas id="predictionChart" style="width: 800; height: 400;">
+</canvas>
+</div>
+</div>
+<!-- Logs Section -->
+<div class="container ml-4 p-8 md">
+<h1 class="text-4xl font-bold text-center text-black mb-6">
+     logs
+    </h1>
+<div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-black">
+<h2 class="text-xl font-semibold text-black mb-4">
+      Détails des logs
+     </h2>
+<h3 class="text-lg font-bold text-success mb-2">📌 Paires activées actuellement :</h3>
+<ul class="list-group mb-4">
+  {% if selected_crypto_pairs %}
+  {% for pair in selected_crypto_pairs %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      {{ pair }}
+      <span class="badge bg-success">active</span>
+</li>
+  {% endfor %}
+{% else %}<li class="list-group-item text-muted">Aucune paire active</li>{% endif %}
+</ul>
+<pre class="hljs bg-white p-4 rounded-lg overflow-auto text-sm whitespace-pre-wrap h-[300px] overflow-y-auto" id="logs">{{ logs }}</pre>
+</div>
+</div>
+<!-- Display Non-Zero Balances Section -->
+<div class="alert alert-info d-none" id="balances-info">
+</div>
+</div>
+<script>
+   async function fetchPredictions() {
+            const response = await fetch('/get_performance');
+            const data = await response.json();
+            return data.performance;
+        }
+
+        async function getDailyPredictions() {
+            const today = new Date().toISOString().split('T')[0];
+            const storedDate = localStorage.getItem('lastPredictionDate');
+            const storedPredictions = localStorage.getItem('dailyPredictions');
+
+            if (storedDate === today && storedPredictions) {
+                return JSON.parse(storedPredictions);
+            } else {
+                const performance = await fetchPredictions();
+                localStorage.setItem('lastPredictionDate', today);
+                localStorage.setItem('dailyPredictions', JSON.stringify(performance));
+                return performance;
+            }
+        }
+
+        // Créer un graphique avec Chart.js
+        async function createChart() {
+            const performance = await getDailyPredictions();
+
+            const datasets = Object.keys(performance).map((crypto, index) => ({
+                label: `${crypto} Performance`,
+                data: performance[crypto],
+                borderColor: `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 1)`,
+                fill: false,
+                borderWidth: 2
+            }));
+
+            const ctx = document.getElementById('predictionChart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({ length: Math.max(...Object.values(performance).map(p => p.length)) }, (_, i) => i + 1),
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { beginAtZero: true },
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        // Créer le graphique au chargement de la page
+        window.onload = createChart;
+  </script>
+<!-- Intégration du socket.io -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js">
+</script>
+<script>
+   function updatelog_Balance_Total() {
+    fetch('/log_Balance_Total')
+        .then(response => response.json())
+        .then(data => {
+            const logsElement = document.getElementById('log_Balance_Total');
+            if (logsElement && data.log_Balance_Total.length >= 10) {
+                logsElement.textContent = data.log_Balance_Total; // Mise à jour du contenu de l'élément
+            }
+        })
+        .catch(error => console.error('Error fetching log_Balance_Total:', error));
+}
+setInterval(updatelog_Balance_Total, 8700);
+  </script>
+<script>
+   function updatelog_usdc_balance() {
+    fetch('/log_usdc_balance')
+        .then(response => response.json())
+        .then(data => {
+            const logsElement = document.getElementById('log_usdc_balance');
+            if (logsElement && data.log_usdc_balance.length >= 3) {
+                logsElement.textContent = data.log_usdc_balance; // Mise à jour du contenu
+            }
+        })
+        .catch(error => console.error('Error fetching log_usdc_balance:', error));
+}
+setInterval(updatelog_usdc_balance, 8600);
+  </script>
+<script>
+   // BTC solde
+function updatelog_eth2_balance() {
+    fetch('/log_eth2_balance')
+        .then(response => response.json())
+        .then(data => {
+            const logsElement = document.getElementById('log_eth2_balance');
+            if (logsElement && data.log_eth2_balance.length >= 3) {
+                logsElement.textContent = data.log_eth2_balance; // Mise à jour du contenu de l'élément
+            }
+        })
+        .catch(error => console.error('Error fetching log_eth2_balance:', error));
+}
+// Appel de la fonction toutes les 2 secondes
+setInterval(updatelog_eth2_balance, 8500);
+  </script>
+<script>
+   // liste des ordres
+function updatelog_orders() {
+    fetch('/log_orders')
+        .then(response => response.json())
+        .then(data => {
+            const logsElement = document.getElementById('log_orders');
+            if (logsElement && data.log_orders.length >= 10000) {
+                logsElement.textContent = data.log_orders; // Mise à jour du contenu de l'élément
+            }
+        })
+        .catch(error => console.error('Error fetching log_orders:', error));
+}
+// Appel de la fonction toutes les 3 secondes
+setInterval(updatelog_orders, 9000);
+  </script>
+<script>
+   // Détails des logs
+    // Mise à jour des logs depuis le serveur toutes les 5 secondes
+    function updatelogs() {
+        fetch('/logs')
+            .then(response => response.json())
+            .then(data => {
+                const logsElement = document.getElementById('logs');
+                if (logsElement) {
+                    logsElement.innerText = data.logs.join("\n");
+                    logsElement.parentElement.scrollTop = logsElement.parentElement.scrollHeight;
+                    if (data.logs.length >= 10) {
+                        logsElement.textContent = data.logs.join("\n"); // Mise à jour du contenu de l'élément
+                    }
+                }
+            })
+            .catch(error => console.error('Error fetching logs:', error));
+    }
+    // Appel de la fonction toutes les 5 secondes
+    setInterval(updatelogs, 5000);
+  </script>
+<script>
+   // Détails des Profits
+// Mise à jour des logs depuis le serveur toutes les 5 secondes
+function updatelog() {
+    fetch('/log')
+        .then(response => response.json())
+        .then(data => {
+            const logsElement = document.getElementById('log');
+            if (logsElement && data.log.length >= 7030) {
+                logsElement.textContent = data.log; // Mise à jour du contenu de l'élément
+            }
+        })
+        .catch(error => console.error('Error fetching log:', error));
+}
+// Appel de la fonction toutes les 5 secondes
+setInterval(updatelog, 10000);
+  </script>
+<!--########################################################################################################-->
+<script>
+   // Gestionnaire pour supprimer les champs vides avant l'envoi du formulaire
+    document.querySelector('form').addEventListener('submit', function (event) {
+        const formElements = this.elements;
+
+        for (let i = formElements.length - 1; i >= 0; i--) {
+            const field = formElements[i];
+            // Vérifier si le champ est un input ou select et si sa valeur est vide
+            if ((field.tagName === 'INPUT' || field.tagName === 'SELECT')
+    && field.type !== 'checkbox'
+    && !field.value.trim()
+    && !['TP_DYNAMIQUE_MIN', 'EXTRA_MARG'].includes(field.name)) {
+                field.removeAttribute('name'); // Supprimer l'attribut name pour ne pas l'envoyer
+            }
+
+            // Supprimer les cases à cocher décochées
+            if (field.type === 'checkbox' && !field.checked) {
+                field.removeAttribute('name');
+            }
+        }
+    });
+  </script>
+<!--##################################################################-->
+<!-- Application des styles dynamiques -->
+<script charset="utf-8" type="text/javascript">
+   function applyStyles(elementId, fontSize, fontWeight, color) {
+        var preElement = document.getElementById(elementId);
+        preElement.style.fontSize = fontSize;
+        preElement.style.fontWeight = fontWeight;
+        preElement.style.color = color;
+    }
+
+    // Appliquer les styles à différents éléments
+    setInterval(() => applyStyles('log_Balance_Total', '50px', 'bold', 'black'), 1000);
+    setInterval(() => applyStyles('log', '18px', 'bold', 'black'), 1000);
+    setInterval(() => applyStyles('log_usdc_balance', '50px', 'bold', 'black'), 1000);
+    setInterval(() => applyStyles('log_eth2_balance', '50px', 'bold', 'black'), 1000);
+    setInterval(() => applyStyles('log_orders', '18px', 'bold', 'black'), 1000);
+  </script>
+<!-- JavaScript pour la gestion des logs et des soumissions de formulaires -->
+<script>
+   // Contrôler le démarrage/arrêt du bot
+    async function controlBot(action) {
+        let url = action === 'start' ? '/start' : '/stop';
+        try {
+            const response = await fetch(url, { method: 'POST' });
+            if (response.ok) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                location.reload();
+            } else {
+                alert('Failed to ' + action + ' the bot');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+  </script>
+<!-- Bootstrap JS (facultatif, pour les composants interactifs) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js">
+</script>
+<div class="card mt-5">
+<h2>📈 Performance USDC (Live)</h2>
+<canvas id="performanceChart"></canvas>
+</div>
+<script>
+  const ctxPerf = document.getElementById('performanceChart').getContext('2d');
+  const performanceChart = new Chart(ctxPerf, {
+      type: 'line',
+      data: {
+          datasets: [{
+              label: 'Profit Cumulé (USDC)',
+              data: [],
+              borderWidth: 2,
+              fill: true,
+              tension: 0.3
+          }]
+      },
+      options: {
+          parsing: false,
+          responsive: true,
+          scales: {
+              x: {
+                  type: 'time',
+                  time: {
+                      unit: 'minute',
+                      tooltipFormat: 'HH:mm:ss'
+                  },
+                  title: {
+                      display: true,
+                      text: 'Heure'
+                  }
+              },
+              y: {
+                  title: {
+                      display: true,
+                      text: 'Profit (USDC)'
+                  },
+                  beginAtZero: true
+              }
+          }
+      }
+  });
+
+  const socket = io();
+  socket.on('update_kpi', (data) => {
+    performanceChart.data.datasets[0].data = data.points;
+    performanceChart.update();
+  });
+</script>
+</body>
+</html>
+<div id="kpi_container" style="margin-top:50px;">
+<h3>📈 KPI Performance par Série</h3>
+<canvas height="400" id="kpiChart" width="800"></canvas>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+        const ctx = document.getElementById('kpiChart').getContext('2d');
+        const kpiChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Trade 1', 'Trade 2', 'Trade 3', 'Trade 4', 'Trade 5'],
+                datasets: [{
+                    label: 'Profit ($)',
+                    data: [2.1, 1.5, 3.0, -1.2, 2.7],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
