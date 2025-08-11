@@ -66,8 +66,25 @@ COINBASE_PASSPHRASE=your_passphrase
 
 4. **Run the application**
 ```bash
-python app.py
+python trading_bot.py
 ```
+
+## 🔧 Code Structure
+
+### Main Files
+- `trading_bot.py` - Main application file (formerly LUTESSIA_FINAL_PRODUCTION_EXEC_REBUILT_WITH_IA_CONNECTED_FINAL_v2_20250805_164551.py)
+- `config.py` - Configuration settings and constants
+- `utils.py` - Common utility functions
+- `index.html` - Web interface
+- `requirements.txt` - Python dependencies
+
+### Recent Improvements
+- ✅ Removed duplicate function definitions
+- ✅ Fixed AI scoring logic issues
+- ✅ Improved error handling for volatility calculations
+- ✅ Standardized logging functions
+- ✅ Added proper .gitignore for version control
+- ✅ Fixed deprecated sklearn dependency
 
 ## 📊 Usage
 

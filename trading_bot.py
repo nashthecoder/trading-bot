@@ -1315,25 +1315,8 @@ if __name__ == '__main__':
     cached_usdc_balance = 0.0
 
 
-    def get_usdc_balance():
-
-        global last_usdc_check, cached_usdc_balance
-
-        now = time.time()
-
-        if now - last_usdc_check < 30:
-
-            return cached_usdc_balance
-
-        print("🪙 Récupération du solde USDC...")
-
-        # Simulation ou appel API réel ici
-
-        cached_usdc_balance = 116.19  # Valeur par défaut simulée
-
-        last_usdc_check = now
-
-        return cached_usdc_balance
+    # REMOVED: Duplicate get_usdc_balance function (simulation)
+    # Use the real implementation further down in the code
 
 
     # Exemple : basculer sur LIMIT si IA très confiante
